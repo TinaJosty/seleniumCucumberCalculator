@@ -8,13 +8,14 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.Select;
 
 import static org.junit.Assert.assertEquals;
 
 public class StepDefinitions {
     ChromeDriver driver;
 
-    @Given("I have opend the web-application")
+    @Given("I have opened the web-application")
     public void iHaveOpendTheWebApplication() throws InterruptedException {
         System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Selenium\\chromedriver.exe");
         driver = new ChromeDriver();
@@ -42,11 +43,12 @@ public class StepDefinitions {
 
 
     @Then("the result should be {int} on the screen")
-    public void the_result_should_be_on_the_screen(Integer expected) {
+    public void the_result_should_be_on_the_screen(Integer expected) throws InterruptedException {
         String actual;
         WebElement calculationResult = driver.findElement(By.name("answer"));
         actual = calculationResult.getAttribute("value");
         assertEquals(String.valueOf(expected),actual);
+        Thread.sleep(4000);
         driver.quit();
         // Write code here that turns the phrase above into concrete actions
 
@@ -55,10 +57,52 @@ public class StepDefinitions {
 
     @When("I press Find Addition")
     public void iPressFindAddition() {
-        WebElement findAddition = driver.findElement(By.xpath("/html/body/table/tbody/tr/td[1]/table[2]/tbody/tr[1]/td[2]/table/tbody/tr/td/table/tbody/tr/td/table/tbody/tr/td/form/p[4]/input"));
+        WebElement findAddition = driver.findElement(By.cssSelector("input[type=button"));
         findAddition.click();
     }
 
+// ******************** GROLLS ******************************
+    @Given("I have opened grolls")
+    public void iHaveOpenedGrolls() throws InterruptedException {
+        System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Selenium\\chromedriver.exe");
+        driver = new ChromeDriver();
+        driver.get("https://www.grolls.se/helags-t-shirt--svart1100099.html");
+        driver.manage().window().maximize();
+        Thread.sleep(4000);  // Let the user actually see something!
+    }
+
+    @And("I have chosen the <size> i want")
+    public void iHaveChosenTheSizeIWant() throws InterruptedException {
+
+        Select chooseSize = new Select(driver.findElement(By.xpath("/html/body/div[4]/main/div[2]/div/div[1]/div[2]/div[5]/form/div[1]/div/div/div/select")));
+
+        chooseSize.selectByValue("1426");
+        Thread.sleep(2000);
 
 
+    }
+
+    @And("I have chosen the <quantity>")
+    public void iHaveChosenTheQuantity() throws InterruptedException {
+        WebElement addQuantity = driver.findElement(By.xpath("/html/body/div[4]/main/div[2]/div/div[1]/div[2]/div[5]/form/div[2]/div/div/div[1]/div/div/span[2]"));
+        addQuantity.click();
+        Thread.sleep(2000);
+    }
+
+    @When("I press Lägg i varukorg")
+    public void iPressLäggIVarukorg() throws InterruptedException {
+
+        WebElement addToBasket = driver.findElement(By.id("product-addtocart-button"));
+        addToBasket.click();
+        Thread.sleep(2000);
+    }
+
+    @Then("there should be <amountOfItems> in the basket")
+    public void thereShouldBeAmountOfItemsInTheBasket() {
+        String expected = "2";
+        WebElement actual = driver.findElement(By.xpath("/html/body/div[4]/header/div[3]/div[4]/a/span/span[1]"));
+
+
+        assertEquals(expected, actual.getText());
+    }
 }

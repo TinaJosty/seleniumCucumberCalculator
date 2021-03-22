@@ -2,7 +2,7 @@ Feature: addition
   In order to avoid silly mistakes As a math idiot I want to be told the sum of two numbers
 
   Scenario Outline: Add two numbers
-    Given I have opend the web-application
+    Given I have opened the web-application
     And I have entered <first> into the calculator
     And I have also entered <second> into the calculator
     When I press Find Addition
